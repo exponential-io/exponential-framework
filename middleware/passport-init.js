@@ -1,7 +1,7 @@
 
 var passport = require('passport');
 
-function csrf(app, callback) {
+function init(app, callback) {
     'use strict';
 
     app.use(passport.initialize());
@@ -10,4 +10,4 @@ function csrf(app, callback) {
     callback(null, []);
 }
 
-module.exports = csrf;
+module.exports = init;

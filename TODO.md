@@ -17,3 +17,4 @@
 10. Add 404 error template to configuration conf.errors.notFound
 11. Same as #10 but for 500 errors conf.errors.serverError
 12. Use grunt for jshint + jscs
+13. Include example of proxy to non-Node server / 3rd party API

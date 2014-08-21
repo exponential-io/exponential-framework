@@ -41,7 +41,8 @@ chalk.enabled = true;
 // Load configurations
 // -------------------
 var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development',
-    lib = frameworkDirs.lib + '/express',
+    lib = frameworkDirs.lib,
+    middleware = frameworkDirs.middleware,
     tasks = [],
     app = express(),
     mongoose;
@@ -149,12 +150,12 @@ function init(projectDirs) {
     // Compression (must be before static files)
     // -----------------------------------------
     // Do not compress in Express. Instead compress with nginx or another proxy.
-    // var enableCompression = require(lib + 'compression');
+    // var enableCompression = require(middleware + 'compression');
     // tasks.push(enableCompression.bind(enableCompression, app, express));
 
     // Client-side and static files
     // -----------------------------------
-    var staticFiles = require(lib + '/static-files');
+    var staticFiles = require(middleware + '/static-files');
     tasks.push(staticFiles.bind(staticFiles, app, express, projectDirs));
 
     // Logging
@@ -162,7 +163,7 @@ function init(projectDirs) {
 
     // Don't use logger for test env
     if (process.env.NODE_ENV !== 'test') {
-        var setupLogging = require(lib + '/logging');
+        var setupLogging = require(middleware + '/logging');
         tasks.push(setupLogging.bind(setupLogging, app, express));
     }
 
@@ -177,17 +178,17 @@ function init(projectDirs) {
 
     // Enable jsonp
     // ------------
-    var setupJsonp = require(lib + '/jsonp');
+    var setupJsonp = require(middleware + '/jsonp');
     tasks.push(setupJsonp.bind(setupJsonp, app));
 
     // Cookies (must be above session)
     // -------------------------------
-    var setupCookies = require(lib + '/cookies');
+    var setupCookies = require(middleware + '/cookies');
     tasks.push(setupCookies.bind(setupCookies, app, express));
 
     // Body parsers (must be above methodOverride)
     // -------------------------------------------
-    var setupBodyParsers = require(lib + '/body-parsers');
+    var setupBodyParsers = require(middleware + '/body-parsers');
     tasks.push(setupBodyParsers.bind(setupBodyParsers, app, express));
 
     // Sessions
@@ -195,19 +196,19 @@ function init(projectDirs) {
 
     // Mongo session storage
     if (conf.get('express.session.db') === 'mongo') {
-        var mongoSessionStorage = require(lib + '/sessions-mongo');
+        var mongoSessionStorage = require(middleware + '/sessions-mongo');
         tasks.push(mongoSessionStorage.bind(mongoSessionStorage, app, express, mongoose, conf));
     }
 
     // Redis session storage
     if (conf.get('express.session.db') === 'redis') {
-        var redisSessionStorage = require(lib + '/sessions-redis');
+        var redisSessionStorage = require(middleware + '/sessions-redis');
         tasks.push(redisSessionStorage.bind(redisSessionStorage, app, express, conf));
     }
 
     // Flash messages
     // --------------
-    var flashMessages = require(lib + '/flash-messages');
+    var flashMessages = require(middleware + '/flash-messages');
     tasks.push(flashMessages.bind(flashMessages, app));
 
     // Dynamic helpers
@@ -221,7 +222,7 @@ function init(projectDirs) {
 
     // Passport initialization
     // -----------------------
-    var passportInit = require(lib + '/passport-init');
+    var passportInit = require(middleware + '/passport-init');
     tasks.push(passportInit.bind(passportInit, app));
 
     // Authorization middleware
@@ -244,13 +245,13 @@ function init(projectDirs) {
     tasks.push(errorResp.bind(errorResp, app));
 
     // 50x errors
-    var internalServerError = require(lib + '/500');
+    var internalServerError = require(middleware + '/500');
     tasks.push(internalServerError.bind(internalServerError, app, conf));
 
     // 404 error handling function must be the last middleware function to be
     // called. This ensures that any request not handled previously will return
     // a 404 error.
-    var notFoundError = require(lib + '/404');
+    var notFoundError = require(middleware + '/404');
     tasks.push(notFoundError.bind(notFoundError, app, conf));
 
     // Start the app by listening on <port>
@@ -273,10 +274,10 @@ function init(projectDirs) {
 
         elapsedTime('Express started');
 
-        var startMessage = 'App started on port ' + port;
+        var startMessage = 'Server started on port ' + port;
         console.log(chalk.blue('Exponential:'), chalk.green(startMessage));
 
-        log.info('Started exponential server on port ' + port);
+        log.info('Started server on port ' + port);
 
         exports = module.exports = app;
     }
