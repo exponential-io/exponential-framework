@@ -1,4 +1,4 @@
-exponential-framework
-=====================
+# Exponential Framework
 
-An ExpressJS MVC framework
+Exponential framework is a Node.js MVC framework based on ExpressJS.
+

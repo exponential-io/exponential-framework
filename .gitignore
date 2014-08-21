@@ -1,0 +1,37 @@
+# Mac files
+.DS_Store
+
+lib-cov
+
+# Package management
+node_modules
+
+# Temp files / working directories
+*.swp
+*.sql~
+*.*~
+
+# Data files
+*.seed
+*.log
+*.csv
+*.dat
+
+# Compressed files
+*.bz
+*.gz
+*.tar
+*.zip
+
+# Process and log files / directories
+pids
+logs
+*.out
+*.pid
+
+# IDE files
+.idea
+
+# Redis
+dump.rdb
+
